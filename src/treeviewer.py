@@ -2,7 +2,7 @@
 '''
 author:     Fabio Zanini
 date:       08/12/14
-content:    Plot the quality along the read pair.
+content:    Plot tree of haplotypes.
 '''
 # Modules
 import os
