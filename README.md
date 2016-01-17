@@ -1,5 +1,7 @@
 # haplotree
-Haplotype tree viewer
+Haplotype tree viewer.
+
+![image](/image.png)
 
 - **Authors**: Fabio Zanini & Richard Neher
 - **License**: MIT
