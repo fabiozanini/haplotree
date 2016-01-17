@@ -5,11 +5,14 @@ date:       08/12/14
 content:    Plot tree of haplotypes.
 '''
 # Modules
+from __future__ import print_function
+
 import os
 import argparse
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+
 
 
 # Functions
@@ -19,7 +22,8 @@ def tree_from_json(json_file):
     import json
     def node_from_json(json_data, node):
         '''Biopython Clade from json (for recursive call)'''
-        for attr,val in json_data.iteritems():
+        for attr in json_data:
+            val = json_data[attr]
             if attr == 'children':
                 for sub_json in val:
                     child = Phylo.BaseTree.Clade()
@@ -322,22 +326,22 @@ def plot_haplotype_trees(datum,
     plt.ioff()
 
     if VERBOSE:
-        print 'Plot haplotype tree'
+        print('Plot haplotype tree')
 
     fig, ax = plt.subplots(1, 1, figsize=(7, 5))
     sns.set_style('white')
     ax.grid(False)
 
     x_offset = 0
-    y_offset = 15
+    y_offset = 35
     y_padding = 15
 
     tree = getattr(datum, tree_label)
     tree.root.branch_length = 0.01
 
     depths = tree.depths()
-    maxdepth = max(depths.itervalues())
-    mindepth = min(depths.itervalues())
+    maxdepth = max(depths.values())
+    mindepth = min(depths.values())
 
     # Normalize frequencies
     freqsum = sum(leaf.frequency for leaf in tree.get_terminals())
@@ -387,22 +391,24 @@ def plot_haplotype_trees(datum,
         datal = [{'hf': 0.05, 'label': '5%'},
                  {'hf': 0.20, 'label': '20%'},
                  {'hf': 1.00, 'label': '100%'}]
-        ax.text(0.98 * maxdepth, 0.03 * ax.get_ylim()[0],
+        ax.text(0.98 * maxdepth,
+                0.03 * ax.get_ylim()[0],
                 'Haplotype frequency:', fontsize=16, ha='right')
         for idl, datuml in enumerate(datal):
             r = rfun(datuml['hf'])
             y = (0.07 + 0.07 * idl) * ax.get_ylim()[0]
-            ax.scatter(0.85 * maxdepth, y, s=r,
-                       facecolor='k',
-                       edgecolor='none')
+            ax.scatter(0.85 * maxdepth, y,
+                       s=r,
+                       facecolor='grey',
+                       edgecolor='black')
             ax.text(0.98 * maxdepth, y + 0.02 * ax.get_ylim()[0],
                     datuml['label'], ha='right',
                     fontsize=14)
 
     # Draw scale bar
     if draw_scale_bar:
-        xbar = (0.3 + 0.3 * (len(datal) >= 9)) * maxdepth
-        ybar = 0.90 * ax.get_ylim()[0]
+        xbar = (0.01 + 0.3 * (len(datal) >= 9)) * maxdepth
+        ybar = 0.02 * ax.get_ylim()[0]
         lbar = 0.05 * maxdepth
         lbar_label = '{:.1G}'.format(lbar)
         lbar = float(lbar_label)
@@ -411,7 +417,7 @@ def plot_haplotype_trees(datum,
                 lbar_label, fontsize=14,
                 ha='center')
 
-    plt.tight_layout(rect=(0, -0.13, 0.98, 1))
+    plt.tight_layout(rect=(0, -0.32, 1, 1))
 
     if fig_filename:
         fig.savefig(fig_filename)
