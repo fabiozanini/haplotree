@@ -411,12 +411,9 @@ def plot_haplotype_trees(datum,
                 lbar_label, fontsize=14,
                 ha='center')
 
-    #plt.tight_layout(rect=(0, -0.13, 0.98, 1))
+    plt.tight_layout(rect=(0, -0.13, 0.98, 1))
 
     if fig_filename:
-        fig_folder = os.path.dirname(fig_filename)
-
-        mkdirs(fig_folder)
         fig.savefig(fig_filename)
         plt.close(fig)
 
